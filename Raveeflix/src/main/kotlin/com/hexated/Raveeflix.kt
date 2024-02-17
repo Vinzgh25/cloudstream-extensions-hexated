@@ -10,7 +10,7 @@ import org.jsoup.nodes.Element
 import org.jsoup.select.Elements
 
 class Raveeflix : MainAPI() {
-    override var mainUrl = "https://levistream.netlify.app/"
+    override var mainUrl = "https://raveeflix.my.id/"
     override var name = "Raveeflix"
     override val hasMainPage = true
     override var lang = "id"
@@ -103,12 +103,12 @@ class Raveeflix : MainAPI() {
                 ?.ownText()?.substringAfter(",")?.toIntOrNull()
         val description =
             document.selectFirst("div.lead.text-neutral-500, span#storyline")
-                ?.text()?.trim()
+                ?.text(response.overview)?.trim()
         val rating =
             document.selectFirst("span#rating")?.text()
                 ?.toRatingInt()
         val actors =
-            document.select("span#cast").text().split(", ")
+            document.select("span#cast").text().split("castMembersText")
                 .map { it.trim() }
 
         val recommendations =
