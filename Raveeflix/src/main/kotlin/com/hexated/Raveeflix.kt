@@ -102,8 +102,8 @@ class Raveeflix : MainAPI() {
             document.selectFirst("div.movie-details > p:nth-child(2), div.max-w-prose.mb-20 > ul > li:nth-child(2) span")
                 ?.ownText()?.substringAfter(",")?.toIntOrNull()
         val description =
-            document.selectFirst("div.lead.text-neutral-500, span#storyline")
-                ?.text(response.overview)?.trim()
+            document.selectFirst("div.lead.text-neutral-500, summary")
+                ?.text()?.trim()
         val rating =
             document.selectFirst("span#rating")?.text()
                 ?.toRatingInt()
