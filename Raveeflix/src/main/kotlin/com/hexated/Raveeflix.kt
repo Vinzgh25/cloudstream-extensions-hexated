@@ -10,7 +10,7 @@ import org.jsoup.nodes.Element
 import org.jsoup.select.Elements
 
 class Raveeflix : MainAPI() {
-    override var mainUrl = "https://raveeflix.my.id/"
+    override var mainUrl = "https://levistream.netlify.app/"
     override var name = "Raveeflix"
     override val hasMainPage = true
     override var lang = "id"
