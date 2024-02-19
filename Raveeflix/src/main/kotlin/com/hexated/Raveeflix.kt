@@ -10,7 +10,7 @@ import org.jsoup.nodes.Element
 import org.jsoup.select.Elements
 
 class Raveeflix : MainAPI() {
-    override var mainUrl = "https://levistream.netlify.app/"
+    override var mainUrl = "https://raveeflix.my.id/"
     override var name = "Raveeflix"
     override val hasMainPage = true
     override var lang = "id"
@@ -47,7 +47,8 @@ class Raveeflix : MainAPI() {
     private fun Element.toSearchResult(): SearchResponse? {
         val title = this.selectFirst("div.text-xl")?.text() ?: return null
         val href = fixUrl(this.attr("href"))
-        val posterUrl = this.selectFirst("div.thumbnail_card")?.attr("style")?.getPoster()
+        val posterUrl = this.selectFirst("div.thumbnail_card")
+            ?.attr("style")?.getposterUrl()
 
         return newMovieSearchResponse(title, Media(href, posterUrl).toJson(), TvType.Movie, false) {
             this.posterUrl = posterUrl
@@ -102,7 +103,7 @@ class Raveeflix : MainAPI() {
             document.selectFirst("div.movie-details > p:nth-child(2), div.max-w-prose.mb-20 > ul > li:nth-child(2) span")
                 ?.ownText()?.substringAfter(",")?.toIntOrNull()
         val description =
-            document.selectFirst("div.lead.text-neutral-500, summary")
+            document.selectFirst("div.lead.text-neutral-500")
                 ?.text()?.trim()
         val rating =
             document.selectFirst("span#rating")?.text()
