@@ -47,9 +47,8 @@ class Raveeflix : MainAPI() {
     private fun Element.toSearchResult(): SearchResponse? {
         val title = this.selectFirst("div.text-xl")?.text() ?: return null
         val href = fixUrl(this.attr("href"))
-        val posterUrl = this.selectFirst("div.thumbnail_card")
+        val posterUrl = media.posterUrl ?: document.selectFirst("div.thumbnail_card, div.w-full.thumbnail_card_related")
             ?.attr("style")?.getposterUrl()
-
         return newMovieSearchResponse(title, Media(href, posterUrl).toJson(), TvType.Movie, false) {
             this.posterUrl = posterUrl
         }
