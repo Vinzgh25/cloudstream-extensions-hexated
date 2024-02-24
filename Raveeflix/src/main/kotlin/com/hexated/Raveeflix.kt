@@ -163,7 +163,7 @@ class Raveeflix : MainAPI() {
     ): Boolean {
 
         val video = app.get(data).document.select("mux-player").attr("src")
-        val video = app.get(data).document.select("video").attr("src")
+        
 
         callback.invoke(
             ExtractorLink(
