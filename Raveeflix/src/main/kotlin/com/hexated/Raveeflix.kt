@@ -155,27 +155,7 @@ class Raveeflix : MainAPI() {
         }
     }
 
-    override suspend fun loadLinks(
-        data: String,
-        isCasting: Boolean,
-        subtitleCallback: (SubtitleFile) -> Unit,
-        callback: (ExtractorLink) -> Unit,
-    ): Boolean {
-
-        val video = app.get(data).document.select("mux-player").attr("src")
-
-        callback.invoke(
-            ExtractorLink(
-                name,
-                name,
-                video,
-                "",
-                Qualities.Unknown.value,
-            )
-        )
-
-        return true
-    }
+    
 
     private suspend fun fetchEpisodesFromPages(
         baseUrl: String,
@@ -192,7 +172,33 @@ class Raveeflix : MainAPI() {
             if (episodeVo.isEmpty()) break
             epsData.addAll(episodeVo)
         }
-        return epsData
+        
+      override suspend fun loadLinks(
+    data: String,
+    isCasting: Boolean,
+    subtitleCallback: (SubtitleFile) -> Unit,
+    callback: (ExtractorLink) -> Unit,
+): Boolean {
+    val document = app.get(data).document
+    // Check for mux-player src attribute
+    val muxVideoSrc = document.select("mux-player").attr("src")
+    if (muxVideoSrc.isNotEmpty()) {
+        callback.invoke(ExtractorLink(name, name, muxVideoSrc, "", Qualities.Unknown.value))
+    }
+
+    // Check for video tag with source element
+    val videoElements = document.select("video source")
+    videoElements.forEach { source ->
+        val videoSrc = source.attr("src")
+        val videoType = source.attr("type")
+        if (videoSrc.isNotEmpty()) {
+            callback.invoke(ExtractorLink(name, name, videoSrc, videoType, Qualities.Unknown.value))
+        }
+    }
+
+    // Return true if at least one video link was found
+    return muxVideoSrc.isNotEmpty() || videoElements.isNotEmpty()
+      }  return epsData
     }
 
     private fun Elements.getEpisodes(season: Int? = 1): List<Episode> {
